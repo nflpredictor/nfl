@@ -1,5 +1,0 @@
-venv/
-01_scraping/nflscraping/__pycache__/
-01_scraping/nflscraping/spiders/__pycache__/
-.vscode/
-*.json
