@@ -86,20 +86,3 @@ upload_file_bucket = "nflpredictor-scrapy"
 upload_file_key = filename
 
 client.upload_file(path+filename,upload_file_bucket,upload_file_key)
-#session = boto3.Session(aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'), aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY'))
-#json_object = filename
-#bucket='nflpredictor-scrapy'
-#session.upload_file(json_object, bucket, 'espn_scores.json')
-#BUCKET_NAME = "nflpredictor-scrapy"
-#OBJECT_NAME = filename
-#Creating Session With Boto3.
-#session = boto3.Session(aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY'))
-#TIMEOUT = 3
-#config = BotoConfig(connect_timeout=TIMEOUT, retries={"mode": "standard"})
-#client = boto3.client("s3", config=config)
-#Creating S3 Resource From the Session.
-#s3 = session.resource('s3')
-#s3.Object(BUCKET_NAME, OBJECT_NAME).upload_file(Filename=filename)
-#print(session)
-
-#s3.put_object(Bucket=BUCKET_NAME, Key=filename, Body=filename)
