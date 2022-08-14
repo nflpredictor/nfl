@@ -9,19 +9,23 @@ import json
 import pandas as pd
 
 # open file with url
-print(os.listdir())
-print(os.listdir("nflscraping/spiders/"))
-df = pd.read_json("espn_scores.json")
 
-list_url = list(df["gamecast"])
-print(list_url)
+file = open("espn_scores_test.json")
+file = json.load(file)
+
+list_urls = ["https://espn.com/nfl/game/_/gameId/" +  element["idgame"] for element in file]
+
+# df = pd.read_json("espn_scores.json")
+
+# list_url = list(df["gamecast"])
+
 class ESPNGamesCastSpider(scrapy.Spider):
 
     name = 'espngamescast'
 
     # Url to start your spider from 
     #example : ['https://www.espn.com/nfl/game/_/gameId/401326129']
-    start_urls = list_url
+    start_urls = list_urls
 
     # Callback function that will be called when starting your spider
     
