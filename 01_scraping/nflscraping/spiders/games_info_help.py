@@ -10,18 +10,20 @@ import pandas as pd
 
 # open file with url
 
-file = open("espn_scores_test.json")
-file = json.load(file)
 
-list_urls = ["https://espn.com/nfl/game/_/gameId/" +  element["idgame"] for element in file]
+my_file = open("url_list_secours.txt", "r")
+content = my_file.read()
+list_urls = content.split("\n")[:-1]
+
+
 
 # df = pd.read_json("espn_scores.json")
 
 # list_url = list(df["gamecast"])
 
-class ESPNGamesCastSpider(scrapy.Spider):
+class ESPNGamesCastHelpSpider(scrapy.Spider):
 
-    name = 'espngamescast'
+    name = 'espngamescasthelp'
 
     # Url to start your spider from 
     #example : ['https://www.espn.com/nfl/game/_/gameId/401326129']
@@ -32,28 +34,40 @@ class ESPNGamesCastSpider(scrapy.Spider):
     def parse(self, response):
 
         # split url to recover idgame   
-        split_url = response.url.split("gameId/")  
+        split_url = response.url.split("gameId/")
+        
         
         yield {
 
-            "idgame" : split_url[-1],             
-            "date" :  response.xpath('//*[@id="gamepackage-game-information"]/article/div/div[1]/div/div[1]/span/@data-date').get(),
-            "stade" : response.xpath('//*[@id="gamepackage-game-information"]/article/div/div[1]/figure/figcaption/div/text()').get().strip(),
+            "idgame" : split_url[-1],           
+                                    #//*[@id="gamepackage-game-information"]/article/div/div[1]/div/div[2]  
+                                    # //*[@id="gamepackage-game-information"]/article/div/div[1]/div/div[1]/span/@data-date'
+            "date" :  response.xpath('//*[@id="gamepackage-game-information"]/article/div/div[1]/div/div[2]/span/@data-date').get(),
+                                    
+                                    
+                                    #//*[@id="gamepackage-game-information"]/article/div/div[1]/div/div[1]
+                                    # '//*[@id="gamepackage-game-information"]/article/div/div[1]/figure/figcaption/div/text()').get().strip(),
+            "stade" : response.xpath('//*[@id="gamepackage-game-information"]/article/div/div[1]/div/div[1]/text()').get(),
+               
             "location" : response.xpath('//*[@id="gamepackage-game-information"]/article/div/div[2]/ul/li/div/text()').get().strip(),
+
+                                            
             "attendance" : response.xpath('//*[@id="gamepackage-game-information"]/article/div/div[2]/div[@class="game-info-note capacity"]/text()').get(),
             "capacity" : response.xpath('//*[@id="gamepackage-game-information"]/article/div/div[2]/div[@class="attendance"]/div[@class="game-info-note capacity"]/text()').get(),
+
+                                        
             "people" : response.xpath('//*[@id="gamepackage-game-information"]/article/div/div[2]/div[@class="attendance"]/span/text()').get(),
             # NFL odds                       
             "line" : response.xpath('//*[@id="gamepackage-game-information"]/article/div/div[2]/div[1]/div[1]/ul/li[1]/text()').get(),
             # Over/under predictions usually involve the number of goals scored in a football match
             "over_under" :  response.xpath('//*[@id="gamepackage-game-information"]/article/div/div[2]/div[1]/div[1]/ul/li[2]/text()').get(),
-            # " referees" : response.xpath('//*[@id="gamepackage-game-information"]/article/div/div[2]/div[2]/div[3]/div/span/text()').get()
+            
                                        
             }
         
 
 # Name of the file where the results will be saved
-filename = "gamescast_test.json"
+filename = "gamescast_test_help.json"
 
 # if th file exist, remove this
 if filename in os.listdir():
@@ -78,5 +92,5 @@ process = CrawlerProcess(settings = {
 })
 
 # Start the crawling using the spider you defined above
-process.crawl(ESPNGamesCastSpider)
+process.crawl(ESPNGamesCastHelpSpider)
 process.start()
