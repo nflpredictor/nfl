@@ -10,12 +10,18 @@ import logging
 import boto3
 import urllib.request
 from credentials import access_key,secret_access_key
+
 class ESPNPlayersInfoSpider(scrapy.Spider):
     name = 'espnplayersinfo'
     #print(os.listdir())
     def __init__(self):
-        with open('01_scraping/json/espn_players_urls.json', encoding='utf-8') as data_file:
-            self.data = json.load(data_file)
+
+        s3 = boto3.client('s3',aws_access_key_id=access_key,aws_secret_access_key=secret_access_key)
+        s3_obj = s3.get_object(Bucket='nflpredictor-scrapy', Key='espn_players_urls.json')
+        json_data = s3_obj["Body"].read().decode('utf-8')
+        self.data = json.loads(json_data)
+        #with open('01_scraping/json/espn_players_urls.json', encoding='utf-8') as data_file:
+        #   self.data = json.load(data_file)
 
     def start_requests(self):
         for i in self.data:
