@@ -6,13 +6,31 @@ import pandas as pd
 import os
 from scrapy.crawler import CrawlerProcess
 import logging 
+import boto3
+import urllib.request
+from credentials import access_key,secret_access_key
 
 class ESPNGamesDetailSpider(scrapy.Spider):
     name = 'espnrosters'
 
     def __init__(self):
-        with open('../../json/espn_scores.json', encoding='utf-8') as data_file:
-            self.data = json.load(data_file)
+        #url='https://nflpredictor-scrapy.s3.eu-west-3.amazonaws.com/espn_scores.json'
+        #json_url = urllib.request(url)
+        #self.data = json.loads(json_url.read())
+        #client = boto3.client()
+        s3 = boto3.client('s3',aws_access_key_id=access_key,aws_secret_access_key=secret_access_key)
+        s3_obj = s3.get_object(Bucket='nflpredictor-scrapy', Key='espn_scores.json')
+        json_data = s3_obj["Body"].read().decode('utf-8')
+        #file_content = s3_obj.get()['Body'].read().decode('utf-8')
+        #self_data = json.loads(content)
+        #data = s3.get_object(Bucket=bucket, Key=key)
+        #self.data = s3_obj['Body'].read().decode('utf-8')
+        #self.data = s3_obj['Body'].read().decode('utf-8')
+        #url = "https://nflpredictor-scrapy.s3.eu-west-3.amazonaws.com/espn_scores.json"
+        #response = urllib.request(url)
+        #self.data = json.loads(response.read())
+        #with open(s3_obj, encoding='utf-8') as data_file:
+        self.data = json.loads(json_data)
 
     def start_requests(self):
         for game in self.data:
@@ -181,11 +199,12 @@ class ESPNGamesDetailSpider(scrapy.Spider):
         }
 
 # Name of the file where the results will be saved
-filename = "../../json/espn_rosters.json"
+path="01_scraping/json/"
+filename = "espn_rosters.json"
 
-# if th file exist, remove this
-if filename in os.listdir():
-    os.remove(filename)
+# if the file exist, remove this
+if filename in os.listdir(path):
+    os.remove(path+filename)
 
 # Declare a new CrawlerProcess with some settings
 ## USER_AGENT => Simulates a browser on an OS
@@ -196,9 +215,9 @@ process = CrawlerProcess(settings = {
     'USER_AGENT': 'Chrome/97.0',
     'LOG_LEVEL': logging.DEBUG,
     #'FEED FORMAT' : ,
-    'FEED URI': '../../json/',
+    'FEED URI': path,
     "FEEDS": {
-        filename : {"format": "json"},
+        path+filename : {"format": "json"},
     },
     "AUTOTHROTTLE_ENABLED" : False
 })
@@ -206,3 +225,10 @@ process = CrawlerProcess(settings = {
 # Start the crawling using the spider you defined above
 process.crawl(ESPNGamesDetailSpider)
 process.start()
+
+client = boto3.client('s3',aws_access_key_id=access_key,aws_secret_access_key=secret_access_key)
+
+upload_file_bucket = "nflpredictor-scrapy"
+upload_file_key = filename
+
+client.upload_file(path+filename,upload_file_bucket,upload_file_key)

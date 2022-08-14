@@ -1,9 +1,12 @@
+from credentials import access_key, secret_access_key
+from http import client
 import scrapy
 import json
 from scrapy.crawler import CrawlerProcess
 import os
 import logging
-
+import boto3
+from botocore.client import Config as BotoConfig
 
 class ESPNScoresSpider(scrapy.Spider):
     name = 'espnscores'
@@ -16,21 +19,11 @@ class ESPNScoresSpider(scrapy.Spider):
             "/year/" +
             str(year)+
             "/seasontype/2")
-
+    
     start_urls=urls_year
 
     def parse(self, response):
-        '''
-        script = [script for script in response.css("script::text") if "window.__renderData" in script.extract()]
-        if script:
-            script = script[0]
-        data = script.extract().split("window.__renderData = ")[-1]
-        json_data = json.loads(data[:-1])
-        for weeks in json_data["plp"]["plp_products"]:
-            for product in weeks["data"]:
-                #yield {"productName":product["productName"]} # data from css:  a.shelf-product-name
-                yield product
-        '''
+
         split = response.url.split("/")
         #print(split)
 
@@ -60,11 +53,12 @@ class ESPNScoresSpider(scrapy.Spider):
         #    yield response.follow(next_page, callback=self.parse)
 
 # Name of the file where the results will be saved
-filename = "../../json/espn_scores.json"
+path="01_scraping/json/"
+filename = "espn_scores.json"
 
-# if th file exist, remove this
-if filename in os.listdir():
-    os.remove(filename)
+# if the file exist, remove this
+if filename in os.listdir(path):
+    os.remove(path+filename)
 
 # Declare a new CrawlerProcess with some settings
 ## USER_AGENT => Simulates a browser on an OS
@@ -75,9 +69,9 @@ process = CrawlerProcess(settings = {
     'USER_AGENT': 'Chrome/97.0',
     'LOG_LEVEL': logging.DEBUG,
     #'FEED FORMAT' : ,
-    'FEED URI' : '../../json/',
+    'FEED URI' : path,
     "FEEDS": {
-        filename : {"format": "json"},
+        path+filename : {"format": "json"},
     },
     "AUTOTHROTTLE_ENABLED" : False
 })
@@ -86,3 +80,26 @@ process = CrawlerProcess(settings = {
 process.crawl(ESPNScoresSpider)
 process.start()
 
+client = boto3.client('s3',aws_access_key_id=access_key,aws_secret_access_key=secret_access_key)
+
+upload_file_bucket = "nflpredictor-scrapy"
+upload_file_key = filename
+
+client.upload_file(path+filename,upload_file_bucket,upload_file_key)
+#session = boto3.Session(aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'), aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY'))
+#json_object = filename
+#bucket='nflpredictor-scrapy'
+#session.upload_file(json_object, bucket, 'espn_scores.json')
+#BUCKET_NAME = "nflpredictor-scrapy"
+#OBJECT_NAME = filename
+#Creating Session With Boto3.
+#session = boto3.Session(aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY'))
+#TIMEOUT = 3
+#config = BotoConfig(connect_timeout=TIMEOUT, retries={"mode": "standard"})
+#client = boto3.client("s3", config=config)
+#Creating S3 Resource From the Session.
+#s3 = session.resource('s3')
+#s3.Object(BUCKET_NAME, OBJECT_NAME).upload_file(Filename=filename)
+#print(session)
+
+#s3.put_object(Bucket=BUCKET_NAME, Key=filename, Body=filename)
