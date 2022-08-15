@@ -1,4 +1,3 @@
-<<<<<<< HEAD:nflscraping/working_files/scores_prep.csv
 ,season,week,awayteam,hometeam,awayscore,homescore,idgame,score_abs,winner_home,winner_away
 0,2018,2,Ravens,Bengals,23,34,401030690,11,1,0
 1,2018,2,Panthers,Falcons,24,31,401030691,7,1,0
