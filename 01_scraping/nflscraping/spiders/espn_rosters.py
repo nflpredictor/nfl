@@ -8,7 +8,7 @@ from scrapy.crawler import CrawlerProcess
 import logging 
 import boto3
 import urllib.request
-from credentials import access_key,secret_access_key
+#from credentials import access_key,secret_access_key
 
 class ESPNGamesDetailSpider(scrapy.Spider):
     name = 'espnrosters'
@@ -18,7 +18,7 @@ class ESPNGamesDetailSpider(scrapy.Spider):
         #json_url = urllib.request(url)
         #self.data = json.loads(json_url.read())
         #client = boto3.client()
-        s3 = boto3.client('s3',aws_access_key_id=access_key,aws_secret_access_key=secret_access_key)
+        s3 = boto3.client('s3',aws_access_key_id=os.environ['AWS_ACCESS_KEY'],aws_secret_access_key=os.environ['AWS_SECRET_ACCESS_KEY'])
         s3_obj = s3.get_object(Bucket='nflpredictor-scrapy', Key='espn_scores.json')
         json_data = s3_obj["Body"].read().decode('utf-8')
         #file_content = s3_obj.get()['Body'].read().decode('utf-8')
@@ -226,7 +226,7 @@ process = CrawlerProcess(settings = {
 process.crawl(ESPNGamesDetailSpider)
 process.start()
 
-client = boto3.client('s3',aws_access_key_id=access_key,aws_secret_access_key=secret_access_key)
+client = boto3.client('s3',aws_access_key_id=os.environ['AWS_ACCESS_KEY'],aws_secret_access_key=os.environ['AWS_SECRET_ACCESS_KEY'])
 
 upload_file_bucket = "nflpredictor-scrapy"
 upload_file_key = filename
