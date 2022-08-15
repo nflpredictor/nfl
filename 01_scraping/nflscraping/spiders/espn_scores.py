@@ -1,4 +1,4 @@
-from credentials import access_key, secret_access_key
+#from credentials import access_key, secret_access_key
 from http import client
 import scrapy
 import json
@@ -80,7 +80,7 @@ process = CrawlerProcess(settings = {
 process.crawl(ESPNScoresSpider)
 process.start()
 
-client = boto3.client('s3',aws_access_key_id=access_key,aws_secret_access_key=secret_access_key)
+client = boto3.client('s3',aws_access_key_id=os.environ['AWS_ACCESS_KEY'],aws_secret_access_key=os.environ['AWS_SECRET_ACCESS_KEY'])
 
 upload_file_bucket = "nflpredictor-scrapy"
 upload_file_key = filename

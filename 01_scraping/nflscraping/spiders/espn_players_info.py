@@ -9,14 +9,14 @@ import os
 import logging
 import boto3
 import urllib.request
-from credentials import access_key,secret_access_key
+#from credentials import access_key,secret_access_key
 
 class ESPNPlayersInfoSpider(scrapy.Spider):
     name = 'espnplayersinfo'
     #print(os.listdir())
     def __init__(self):
 
-        s3 = boto3.client('s3',aws_access_key_id=access_key,aws_secret_access_key=secret_access_key)
+        s3 = boto3.client('s3',aws_access_key_id=os.environ['AWS_ACCESS_KEY'],aws_secret_access_key=os.environ['AWS_SECRET_ACCESS_KEY'])
         s3_obj = s3.get_object(Bucket='nflpredictor-scrapy', Key='espn_players_urls.json')
         json_data = s3_obj["Body"].read().decode('utf-8')
         self.data = json.loads(json_data)
@@ -91,7 +91,7 @@ process = CrawlerProcess(settings = {
 process.crawl(ESPNPlayersInfoSpider)
 process.start()
 
-client = boto3.client('s3',aws_access_key_id=access_key,aws_secret_access_key=secret_access_key)
+client = boto3.client('s3',aws_access_key_id=os.environ['AWS_ACCESS_KEY'],aws_secret_access_key=os.environ['AWS_SECRET_ACCESS_KEY'])
 upload_file_bucket = "nflpredictor-scrapy"
 upload_file_key = filename
 client.upload_file(path+filename,upload_file_bucket,upload_file_key)
