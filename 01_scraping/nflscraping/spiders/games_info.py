@@ -10,7 +10,7 @@ import pandas as pd
 
 # open file with url
 
-file = open("espn_scores.json")
+file = open("json/espn_scores.json")
 file = json.load(file)
 
 list_urls = ["https://espn.com/nfl/game/_/gameId/" +  element["idgame"] for element in file]
@@ -53,7 +53,8 @@ class ESPNGamesCastSpider(scrapy.Spider):
         
 
 # Name of the file where the results will be saved
-filename = "gamescast_test.json"
+
+filename = "json/gamescast.json"
 
 # if th file exist, remove this
 if filename in os.listdir():
