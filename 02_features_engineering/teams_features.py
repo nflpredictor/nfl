@@ -102,3 +102,6 @@ print(df_teams_stats)
 
 #df.loc[df.season==2017]
 #df.loc[(df.player_name=='Kyler Murray') & (df.game_id==401326597)]
+
+# Creation of the csv
+df_teams_stats.to_csv('teams_win_streak.csv')
