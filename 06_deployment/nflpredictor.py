@@ -4,6 +4,7 @@ import pandas as pd
 import numpy as np
 import json
 import os
+import datetime
 
 st.title('NFL Predictor 2022')
 
@@ -19,20 +20,42 @@ df = pd.read_json(json_file)
 
 weeks = df['week'].unique()
 weeks = np.sort(weeks)
+weeks = pd.DataFrame(weeks)
 
-teams = df['awayteam'].unique()
-teams = np.sort(teams)
+#today = datetime.now()
+#teams = df['awayteam'].unique()
+#teams = np.sort(teams)
+#teams = pd.DataFrame(teams)
 
 col_left, col_right = st.columns(2)
 
 with st.container():
     with col_left:
-        option = st.selectbox('Pick your week',weeks)
+        week = st.selectbox('Pick your week',weeks)
     with col_right:
-        teams = st.selectbox('Pick your team',teams)
+        teams = df.loc[(df.week==week)]
+        awayteams = pd.DataFrame({'team':teams.awayteam.unique()})
+        hometeams = pd.DataFrame({'team':teams.hometeam.unique()})
+        teams_df = [awayteams, hometeams]
+        teams = pd.concat(teams_df,ignore_index=True)
+        teams = teams.sort_values(by=['team'])
+        team = st.selectbox('Pick your team',teams)
+
+game = df.loc[(df.week==week) & ((df.hometeam==team) | (df.awayteam==team))]
+away_team = game.iloc[0]['awayteam']
+home_team = game.iloc[0]['hometeam']
+stadium = game.iloc[0]['stadium']
+location = game.iloc[0]['location']
 
 with st.container():
+    st.markdown("<h1 style='text-align: center;'>"+stadium+"</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 style='text-align: center;'>"+location+"</h1>", unsafe_allow_html=True)
+
+with st.container():    
     with col_left:
-        st.markdown('Away Team')
+        #st.markdown("<h1 style='text-align: center; color: red;'>Some title</h1>", unsafe_allow_html=True)
+        st.markdown("<h1 style='text-align: center; color: red;'>"+away_team+"</h1>", unsafe_allow_html=True)
+        #st.markdown('pouet1')
     with col_right:
-        st.markdown('Home Team')
+        st.markdown("<h1 style='text-align: center; color: red;'>"+home_team+"</h1>", unsafe_allow_html=True)
+        #st.markdown('pouet2')
