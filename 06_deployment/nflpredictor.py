@@ -27,6 +27,7 @@ weeks = pd.DataFrame(weeks)
 #teams = np.sort(teams)
 #teams = pd.DataFrame(teams)
 
+<<<<<<< HEAD
 with st.container():
         global_weeks = st.selectbox('Pick your week to show all the games',weeks)
 
@@ -37,6 +38,10 @@ with st.container():
         st.text(games)
 
 col_left, col_right = st.columns(2)
+=======
+col_left, col_right = st.columns(2)
+
+>>>>>>> f6c596f940be091d5d1c2c3d1c398e3989c8a8ff
 with st.container():
     with col_left:
         week = st.selectbox('Pick your week',weeks)
