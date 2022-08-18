@@ -21,8 +21,10 @@ class NFLTeamsLogosSpider(scrapy.Spider):
                 #try:
                     yield{
                         #'week': response.css('div.custom--week.is-active > span.week.week-range::text').get(),
-                        'team_name' : team.css('h4.d3-o-media-object__roofline.nfl-c-custom-promo__headline::text').get(),
-                        'img_link' : team.css('img.img-responsive::attr(src').get()
+                        'img' : team.xpath('//*[@id="main-content"]/section/div/div[2]/section/div/div[2]/div/div/figure/picture/img/@alt').get(),
+                        'team_name' : team.css('img.img-responsive::attr(alt)').get(),
+                        #'img_link' : team.css('img.img-responsive::attr(src').get()
+                        
                     }
             #except:
         #return super().parse(response, **kwargs)
