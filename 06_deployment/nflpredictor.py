@@ -5,6 +5,10 @@ import numpy as np
 import json
 import os
 import datetime
+import streamlit.components.v1 as components  # Import Streamlit
+from PIL import Image
+
+
 
 st.title('NFL Predictor 2022')
 
@@ -31,10 +35,32 @@ with st.container():
         global_weeks = st.selectbox('Pick your week to show all the games',weeks)
 
 games = df.loc[(df.week==global_weeks)]
+games.reset_index()
 #games = games.iloc[:,'away_team']
+#week = df.loc[(df.week==global_weeks)]
 
-with st.container():
-        st.text(games)
+
+
+col_away_logo, col_away_team, col_home_logo, col_home_team = st.columns(4)
+for index,row in games.iterrows():
+    with st.container():
+        #with col_away_logo:
+            #image = Image.open('06_deployment/src/'+row['awayteam']+'.png')
+            #st.image(image)
+            #print(os.listdir())
+        with col_away_team:
+            image = Image.open('06_deployment/src/'+row['awayteam']+'.png')
+            st.image(image)
+            st.text(row['awayteam'])
+        with col_home_team:
+            image = Image.open('06_deployment/src/'+row['hometeam']+'.png')
+            st.image(image)
+            st.text(row['hometeam'])  
+        #with col_home_logo:
+            #image = Image.open('06_deployment/src/'+row['hometeam']+'.png')
+            #st.image(image)
+
+        #st.text(games)
 
 col_left, col_right = st.columns(2)
 
