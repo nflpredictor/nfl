@@ -1,4 +1,5 @@
 from optparse import Option
+#from turtle import width
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -41,7 +42,7 @@ games.reset_index()
 
 
 
-col_away_logo, col_away_team, col_home_logo, col_home_team = st.columns(4)
+col1 , col_away_team, col_home_team , col4= st.columns(4)
 for index,row in games.iterrows():
     with st.container():
         #with col_away_logo:
@@ -49,12 +50,14 @@ for index,row in games.iterrows():
             #st.image(image)
             #print(os.listdir())
         with col_away_team:
+            #st.header("Away team")
             image = Image.open('src/'+row['awayteam']+'.png')
-            st.image(image)
+            st.image(image,width=32)
             st.text(row['awayteam'])
         with col_home_team:
+            #st.header("Home team")
             image = Image.open('src/'+row['hometeam']+'.png')
-            st.image(image)
+            st.image(image,width=32)
             st.text(row['hometeam'])  
         #with col_home_logo:
             #image = Image.open('06_deployment/src/'+row['hometeam']+'.png')
@@ -77,6 +80,7 @@ with st.container():
         team = st.selectbox('Pick your team',teams)
 
 game = df.loc[(df.week==week) & ((df.hometeam==team) | (df.awayteam==team))]
+
 away_team = game.iloc[0]['awayteam']
 home_team = game.iloc[0]['hometeam']
 stadium = game.iloc[0]['stadium']
@@ -89,8 +93,14 @@ with st.container():
 with st.container():    
     with col_left:
         #st.markdown("<h1 style='text-align: center; color: red;'>Some title</h1>", unsafe_allow_html=True)
-        st.markdown("<h1 style='text-align: center; color: red;'>"+away_team+"</h1>", unsafe_allow_html=True)
+        image = Image.open('src/'+row['awayteam']+'.png')
+        st.image(image)
+        st.text(row['awayteam'])
+        #st.markdown("<h1 style='text-align: center; color: red;'>"+away_team+"</h1>", unsafe_allow_html=True)
         #st.markdown('pouet1')
     with col_right:
-        st.markdown("<h1 style='text-align: center; color: red;'>"+home_team+"</h1>", unsafe_allow_html=True)
+        image = Image.open('src/'+row['hometeam']+'.png')
+        st.image(image)
+        st.text(row['hometeam'])
+        #st.markdown("<h1 style='text-align: center; color: red;'>"+home_team+"</h1>", unsafe_allow_html=True)
         #st.markdown('pouet2')
