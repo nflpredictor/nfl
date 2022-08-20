@@ -15,4 +15,4 @@ COPY . /app
 
 ENTRYPOINT ["streamlit", "run"]
 
-CMD ["nflpredictor.py"]0    
+CMD ["nflpredictor.py"]

@@ -48,11 +48,10 @@ st.text('')
 
 ### PREDICTION SECTION
 
-df_global = pd.read_csv('results_games_2022_xgb.csv') # ATTENTION SI LE NOM DU FICHIER DE PREDICTION CHANGE, VENIR LE MODIFIER ICI
+df_global = pd.read_csv('results_games_2022.csv') # ATTENTION SI LE NOM DU FICHIER DE PREDICTION CHANGE, VENIR LE MODIFIER ICI
 df_global['game'] = df_global[['hometeam', 'awayteam']].agg(' vs '.join, axis=1)
 
-#full_dataset = pd.read_csv('../../04_datasets/nfl_dataset_vf.csv') #Update : Fichier csv passé dans le même dossier (Plus dans un dossier parent)
-full_dataset = pd.read_csv('nfl_dataset_vf.csv')
+full_dataset = pd.read_csv('../../04_datasets/nfl_dataset_vf.csv')
 
 global_weeks = df_global['week'].unique()
 global_weeks = np.sort(global_weeks)
