@@ -1,12 +1,15 @@
 #from credentials import access_key, secret_access_key
+#from asyncio.windows_events import NULL
+from gettext import NullTranslations
 from http import client
+#from turtle import title
 import scrapy
 import json
 from scrapy.crawler import CrawlerProcess
 import os
 import logging
-import boto3
-from botocore.client import Config as BotoConfig
+#import boto3
+#from botocore.client import Config as BotoConfig
 
 class ODDS2021Spider(scrapy.Spider):
     name = 'odds2021'
@@ -21,23 +24,42 @@ class ODDS2021Spider(scrapy.Spider):
 
     def parse(self, response):
 
-        split = response.url.split("/")
+        split = response.url.split("=")
         #print(split)
 
-        for games in response.css('tbody'):
-            for rows in games.css('//*/tr'):
-                if bool(games.xpath('//*[@id="main"]/div/div[2]/table/tbody/tr/th').get()):
-            #try:
-                #idgame = scores.css('section.Scoreboard.bg-clr-white.flex.flex-auto.justify-between::attr(id)').get()
-                    yield{
-                        #'week': response.css('div.custom--week.is-active > span.week.week-range::text').get(),
-                        #'season' : split[9],
-                        'week' : split[4],
-                        'awayteam': rows.xpath('//*[@id="main"]/div/div[2]/table/tbody/tr/td[2]/div[2]::text').get(),
-                        'hometeam': rows.xpath('//*[@id="main"]/div/div[2]/table/tbody/tr/td[1]/div[2]::text').get(),
-                        'oddaway': rows.xpath('//*[@id="main"]/div/div[2]/table/tbody/tr/td[4]::text').get(),
-                        'oddhome' : rows.xpath('//*[@id="main"]/div/div[2]/table/tbody/tr/td[3]::text').get()
-                        }
+
+        for rows in response.xpath(('//div/div[2]/table/tbody/tr')):
+            #if bool(game.xpath('//*[@id="main"]/div/div[2]/table/tbody/tr/th')) == False:
+            rowvalue = rows.xpath('.//td/div/text()').get()
+            if(rowvalue=='FINAL'):
+                yield{
+                    'week': split[2],
+                    'team': rows.xpath('./td[2]/div[2]/text()').get(),
+                    'moneyline': rows.xpath('./td[4]/text()').get()
+                }
+            elif(rowvalue is not None):
+                yield{
+                    'week': split[2],
+                    'team': rows.xpath('./td[1]/div[2]/text()').get(),
+                    'moneyline': rows.xpath('./td[3]/text()').get()    
+                    
+                }
+                '''
+            else:
+                yield{
+                    'week': 'home',
+                    'team': game.xpath('//*[@id="main"]/div/div[2]/table/tbody/tr/td[1]/div[2]/text()').get()
+                }
+            #FINAL : //*[@id="main"]/div/div[2]/table/tbody/tr[2]/td[1]/div[1]
+            #GB : //*[@id="main"]/div/div[2]/table/tbody/tr[2]/td[2]/div[2]
+            #ARI = //*[@id="main"]/div/div[2]/table/tbody/tr[3]/td[1]/div[2]'''
+                '''yield{
+                    'week': split[2],
+                    'awayteam': game.xpath('//*[@id="main"]/div/div[2]/table/tbody/tr/td[2]/div[2]/text()').get(),
+                    'hometeam': game.xpath('//*[@id="main"]/div/div[2]/table/tbody/tr/td[1]/div[2]/text()').get(),
+                    'oddaway': game.xpath('//*[@id="main"]/div/div[2]/table/tbody/tr/td[4]/text()').get(),
+                    'oddhome' : game.xpath('//*[@id="main"]/div/div[2]/table/tbody/tr/td[3]/text()').get()
+                    }'''
             #except:
         #return super().parse(response, **kwargs)
         #next_page = response.css('a.nfl-o-table-pagination__next').attrib['href']
