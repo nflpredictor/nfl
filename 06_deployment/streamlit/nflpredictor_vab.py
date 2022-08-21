@@ -147,7 +147,7 @@ with st.container():
 games = df.loc[(df.week==global_weeks)]
 games.reset_index()
 
-df_global = pd.read_csv('results_games_2022.csv')
+df_global = pd.read_csv('results_games_2022_xgb.csv')
 df_global = df_global.loc[(df_global.week==global_weeks)]
 df_global = df_global.replace("Commanders", "Washington")
 df_global.reset_index()
