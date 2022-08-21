@@ -97,7 +97,7 @@ with st.container():
         st.markdown("<p style='text-align: center;'>"' '"</p>", unsafe_allow_html=True)
         st.markdown("<p style='text-align: center;'>"+away_team+"</p>", unsafe_allow_html=True)
     with col_results:
-        st.balloons()
+        #st.balloons()
         st.markdown("<p style='text-align: center;'>"' '"</p>", unsafe_allow_html=True)
         st.markdown("<p style='text-align: center;'>"' '"</p>", unsafe_allow_html=True)
         if(game_line_in_df.iloc[0]['winner']==1):
