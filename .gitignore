@@ -1,6 +1,5 @@
 venv/
 01_scraping/nflscraping/nflscraping/__pycache__/
 01_scraping/nflscraping/nflscraping/spiders/__pycache__/
-*.json
 env.sh
 .gitignore

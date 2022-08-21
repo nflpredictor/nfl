@@ -97,7 +97,7 @@ with st.container():
         st.markdown("<p style='text-align: center;'>"' '"</p>", unsafe_allow_html=True)
         st.markdown("<p style='text-align: center;'>"+away_team+"</p>", unsafe_allow_html=True)
     with col_results:
-        st.balloons()
+        #st.balloons()
         st.markdown("<p style='text-align: center;'>"' '"</p>", unsafe_allow_html=True)
         st.markdown("<p style='text-align: center;'>"' '"</p>", unsafe_allow_html=True)
         if(game_line_in_df.iloc[0]['winner']==1):
@@ -147,7 +147,7 @@ with st.container():
 games = df.loc[(df.week==global_weeks)]
 games.reset_index()
 
-df_global = pd.read_csv('results_games_2022.csv')
+df_global = pd.read_csv('results_games_2022_xgb.csv')
 df_global = df_global.loc[(df_global.week==global_weeks)]
 df_global = df_global.replace("Commanders", "Washington")
 df_global.reset_index()
