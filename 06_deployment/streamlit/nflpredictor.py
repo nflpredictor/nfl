@@ -127,31 +127,4 @@ with st.container():
 #df_stats = pd.read_csv('espn_scores.json')
 col_away_detail, col_home_detail = st.columns(2)
 
-with st.container():  
-    with col1:
-        st.write(' ')  
-    with col_away_detail:
-        #st.markdown("<h1 style='text-align: center; color: red;'>Some title</h1>", unsafe_allow_html=True)
-        image = Image.open('src/'+away_team+'.png')
-        st.image(image)
-        #st.text(away_team)
-        st.markdown("<p style='text-align: center;'>"+away_team+"</p>", unsafe_allow_html=True)
-        #st.markdown("<h1 style='text-align: center; color: red;'>"+away_team+"</h1>", unsafe_allow_html=True)
-        #st.markdown('pouet1')
-        #col1, col2= st.columns(2)
-        #col1.metric("2021 Away victories", "70 °F", "1.2 °F")
-        #col2.metric("2021 biggest win streak", "9 mph", "-8%")
-    with col_home_detail:
-        image = Image.open('src/'+home_team+'.png')
-        st.image(image)
-        #st.markdown("<p style='text-align: center;'>"+st.image(image)+"</p>", unsafe_allow_html=True)
-        #st.text(home_team)
-        st.markdown("<p style='text-align: center;'>"+home_team+"</p>", unsafe_allow_html=True)
-        #st.markdown("<h1 style='text-align: center; color: red;'>"+home_team+"</h1>", unsafe_allow_html=True)
-        #st.markdown('pouet2')mù
-        #col1, col2 = st.columns(2)
-        #col1.metric("2021 Home victories", "70 °F", "1.2 °F")
-        #col2.metric("2021 biggest win streak", "9 mph", "-8%")
-    with col5:
-        st.write(' ')
    
